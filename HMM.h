@@ -1,5 +1,5 @@
-#ifndef Hmm_H
-#define Hmm_H
+#ifndef HMM_H
+#define HMM_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,16 +13,13 @@
 
 #define MAX_LINE	1024
 #define DECIMAL		10
-		// The size field represents an integer value stored in the node
-	// The next pointer points to the next node in the linked list
-	// The prev pointer points to the previous node in the linked list
 #define getInt(x, ...)	atoi(x)
 
 struct node
 {
-	size_t size;
-	struct node* next;
-	struct node* prev;
+	size_t size;		// The size field represents an integer value stored in the node
+	struct node* next;	// The next pointer points to the next node in the linked list
+	struct node* prev;	// The prev pointer points to the previous node in the linked list
 };
 
 void Greeting();
