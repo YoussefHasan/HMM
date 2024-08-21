@@ -14,67 +14,59 @@ void Greeting()
 	write(STDOUT, text, strlen(text));
 }
 
-void* HmmAlloc(size_t size) {
-    // Check if the requested size is valid
-    if (size <= 0) {
-        return NULL;
-    }
-
-    // Search for a free block that is large enough to satisfy the request
-    struct node* current = head;
-    while (current != NULL) {
-        if (current->size >= size) {
-            // Found a suitable free block, remove it from the list
-            if (current == head) {
-                head = current->next;
-            } else {
-                current->prev->next = current->next;
-            }
-
-            // Return the address of the payload (after the header)
-            return (void*)((char*)current + sizeof(struct node));
-        }
-        current = current->next;
-    }
-
-    // If no suitable free block is found, allocate a new block from the heap
-    if (program_break + sizeof(struct node) + size <= SIZE) {
-        struct node* new_block = (struct node*)(heap + program_break);
-        new_block->size = size;
-        new_block->next = NULL;
-        new_block->prev = tail;
-        if (tail != NULL) {
-            tail->next = new_block;
-        } else {
-            head = new_block;
-        }
-        tail = new_block;
-        program_break += sizeof(struct node) + size;
-        return (void*)((char*)new_block + sizeof(struct node));
-    }
-
-    // If the heap is exhausted, return NULL
-    return NULL;
+void* HmmAlloc(size_t size)
+{
+	// Check if the requested size is valid
+	if (size <= 0)
+		{return NULL;}
+	// Search for a free block that is large enough to satisfy the request
+	struct node* current = head;
+	while (current != NULL)
+	{
+		if (current->size >= size)
+		{	// Found a suitable free block, remove it from the list
+            		if (current == head)
+            			{head = current->next;}
+            		else
+	            		{current->prev->next = current->next;}
+		// Return the address of the payload (after the header)
+		return (void*)((char*)current + sizeof(struct node));
+		}
+		current = current->next;
+	}
+	// If no suitable free block is found, allocate a new block from the heap
+	if (program_break + sizeof(struct node) + size <= SIZE)
+	{
+		struct node* new_block = (struct node*)(heap + program_break);
+		new_block->size = size;
+		new_block->next = NULL;
+		new_block->prev = tail;
+		if (tail != NULL)
+			{tail->next = new_block;}
+		else
+			{head = new_block;}
+		tail = new_block;
+		program_break += sizeof(struct node) + size;
+		return (void*)((char*)new_block + sizeof(struct node));
+	}
+	return NULL;
 }
 
-void HmmFree(void* ptr) {
-    // Check if the pointer is valid
-    if (ptr == NULL) {
-        return;
-    }
-
-    // Calculate the address of the header
-    struct node* header = (struct node*)((char*)ptr - sizeof(struct node));
-
-    // Add the block to the free block list
-    header->next = head;
-    header->prev = NULL;
-    if (head != NULL) {
-        head->prev = header;
-    } else {
-        tail = header;
-    }
-    head = header;
+void HmmFree(void* ptr)
+{
+	// Check if the pointer is valid
+	if (ptr == NULL)
+		{return;}
+	// Calculate the address of the header
+	struct node* header = (struct node*)((char*)ptr - sizeof(struct node));
+	// Add the block to the free block list
+	header->next = head;
+	header->prev = NULL;
+	if (head != NULL)
+		{head->prev = header;}
+	else
+		{tail = header;}
+	head = header;
 }
 void HmmCheckSize()
 {

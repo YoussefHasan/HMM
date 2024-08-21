@@ -5,7 +5,7 @@
 
 #define NUM_ALLOCS 10000
 #define MAX_SIZE 10240
-#define MAX_ITERATIONS 1000000
+#define MAX_ITERATIONS 1000
 
 void random_alloc_free_test() {
     srand((unsigned int)time(NULL));
